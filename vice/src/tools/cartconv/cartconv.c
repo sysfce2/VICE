@@ -1665,6 +1665,14 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    if (cart_type == CARTRIDGE_MAGIC_DESK_PLUS && cart_subtype > 2) {
+        fprintf(stderr,
+                "Error: Magic Desk Plus revision must be 0 (SRAM + EEPROM), "
+                "1 (SRAM only), or 2 (EEPROM only)\n");
+        cleanup();
+        exit(1);
+    }
+
     /* if cart type is not given on cmdline and we are loading a crt file, then
        detect its type */
     if (cart_type == -1) {
