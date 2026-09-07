@@ -10123,6 +10123,8 @@ MACH 5
 @item
 Magic Desk
 @item
+Magic Desk Plus
+@item
 Magic Desk 16
 @item
 Magic Formel
@@ -10568,6 +10570,8 @@ The following cartridge types are valid:
 85: Magic Desk 16
 @item
 86: Protovision "Megabyter"
+@item
+87: Magic Desk Plus
 @end itemize
 
 @vindex CartridgeFile
@@ -10815,6 +10819,31 @@ numeric digits. Default is 87000000. LTK DOS install disks are locked to their
 respective LTK host adapor boot ROM. This setting will override the boot ROM 
 value.  The floppy disk serial number can be changed with a sector editor on 
 track 18, sector 18.
+
+@vindex MagicDeskPlusRevision
+@item MagicDeskPlusRevision
+Integer specifying the Magic Desk Plus hardware revision.
+(0: SRAM and EEPROM, 1: SRAM only, 2: EEPROM only)
+
+@vindex MagicDeskPlusSRAMImage
+@item MagicDeskPlusSRAMImage
+String specifying the filename of the optional 128KiB Magic Desk Plus SRAM
+image. Without an image, SRAM is still emulated, but its contents are temporary.
+
+@vindex MagicDeskPlusSRAMWrite
+@item MagicDeskPlusSRAMWrite
+Boolean specifying whether the Magic Desk Plus SRAM image is saved when the
+cartridge is detached or the emulator exits.
+
+@vindex MagicDeskPlusEEPROMImage
+@item MagicDeskPlusEEPROMImage
+String specifying the filename of the optional 8KiB or 32KiB Magic Desk Plus
+EEPROM image. Without an image, an 8KiB EEPROM is emulated temporarily.
+
+@vindex MagicDeskPlusEEPROMWrite
+@item MagicDeskPlusEEPROMWrite
+Boolean specifying whether the Magic Desk Plus EEPROM image is saved when the
+cartridge is detached or the emulator exits.
 
 @vindex MagicVoiceCartridgeEnabled
 @item MagicVoiceCartridgeEnabled
@@ -11697,6 +11726,39 @@ Allow/disallow writes to MMC Replay EEPROM image
 Set MMC Replay clockport device
 (@code{MMCRClockPort}).
 (0: None, 1: ETH64-II, 2: RRNet, 3: Silver Surfer, 4: MP3@@64, 5: Catweasel MkIII SID)
+
+@findex -cartmdp
+@item -cartmdp <name>
+Attach raw 256/512/1024KiB Magic Desk Plus cartridge image. The revision selected
+by @code{MagicDeskPlusRevision} is used.
+
+@findex -magicdeskplusrevision
+@item -magicdeskplusrevision <revision>
+Specify Magic Desk Plus revision
+(@code{MagicDeskPlusRevision}).
+(0: SRAM and EEPROM, 1: SRAM only, 2: EEPROM only)
+
+@findex -magicdeskplussramimage
+@item -magicdeskplussramimage <filename>
+Specify Magic Desk Plus SRAM image filename
+(@code{MagicDeskPlusSRAMImage}).
+
+@findex -magicdeskplussramwrite, +magicdeskplussramwrite
+@item -magicdeskplussramwrite
+@itemx +magicdeskplussramwrite
+Allow/disallow writes to Magic Desk Plus SRAM image
+(@code{MagicDeskPlusSRAMWrite=1}, @code{MagicDeskPlusSRAMWrite=0}).
+
+@findex -magicdeskpluseepromimage
+@item -magicdeskpluseepromimage <filename>
+Specify Magic Desk Plus EEPROM image filename
+(@code{MagicDeskPlusEEPROMImage}).
+
+@findex -magicdeskpluseepromwrite, +magicdeskpluseepromwrite
+@item -magicdeskpluseepromwrite
+@itemx +magicdeskpluseepromwrite
+Allow/disallow writes to Magic Desk Plus EEPROM image
+(@code{MagicDeskPlusEEPROMWrite=1}, @code{MagicDeskPlusEEPROMWrite=0}).
 
 @findex -cartmv
 @item -cartmv <name>
@@ -23798,6 +23860,9 @@ Lt. Kernal Host Adaptor .crt file
 MACH 5 .crt file
 @item md
 Magic Desk .crt file
+@item mdp
+Magic Desk Plus 256KiB/512KiB/1024KiB .crt file. Use @code{-s 0} for SRAM and
+EEPROM, @code{-s 1} for SRAM only, or @code{-s 2} for EEPROM only.
 @item md16
 Magic Desk 16 .crt file
 @item mf
@@ -23970,6 +24035,9 @@ Convert a .crt file to a .prg file with default load-address.
 Convert a .crt file to a .prg file with 49152 as the load-address.
 @item cartconv -t ocean -i foo.bin -o foo.crt
 Convert a binary file to an ocean type cartridge.
+@item cartconv -t mdp -s 0 -i game.bin -o game.crt
+Create a Magic Desk Plus cartridge with SRAM and EEPROM. Revisions 1 and 2
+select the SRAM-only and EEPROM-only variants respectively.
 @item cartconv -t dep64 -i dep64.bin -i eprom.prg -o foo.crt
 Inserting a 32KiB EPROM file into an dep64 type cartridge.
 @itemize @bullet
@@ -30586,6 +30654,8 @@ $0010- xxxx - ROM data
 @tab Magic Desk 16
 @item 86
 @tab Protovision "Megabyter"
+@item 87
+@tab Magic Desk Plus (Subtype 0: SRAM and EEPROM, 1: SRAM only, 2: EEPROM only)
 @end multitable
 
 (*Note: Ocean type 1 includes Navy Seals, Robocop 2 & 3, Shadow of the Beast,
@@ -35069,6 +35139,59 @@ used by "SNK vs CAPCOM - Stronger Edition"
 100830: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
 @end example
 
+
+@c @node FIXME
+@subsubsection 87 - Magic Desk Plus
+
+@multitable @columnfractions .3 .7
+@item Size
+@tab 256KiB, 512KiB, or 1024KiB ROM (32, 64, or 128 banks of 8KiB)
+@item EXROM
+@tab active (lo) (0)
+@item GAME
+@tab inactive (hi) (1)
+@item Startup mode
+@tab 8KiB Game
+@item Load address
+@tab (banks 0-127) - $8000-$9FFF
+@item Additional memory
+@tab 128KiB SRAM and/or 8KiB/32KiB parallel EEPROM
+@end multitable
+
+@example
+       00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F       ASCII
+       -----------------------------------------------  ----------------
+000000 43 36 34 20 43 41 52 54 52 49 44 47 45 20 20 20  C64 CARTRIDGE
+000010 00 00 00 40 01 00 00 57 00 01 00 00 00 00 00 00  ...@...W........
+000020 4d 61 67 69 63 20 44 65 73 6b 20 50 6c 75 73 00  Magic Desk Plus.
+000030 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+000040 43 48 49 50 00 00 20 10 00 00 00 00 80 00 20 00  CHIP.. ....... .
+000050 09 80 39 80 c3 c2 cd 38 30 78 8e 16 d0 20 a3 fd  ..9....80x... ..
+@dots{}
+040230 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff  ................
+@end example
+
+
+Magic Desk Plus is very similar to the original Magic Desk, except it has
+additional SRAM and/or EEPROM:
+
+@itemize @bullet
+@item Revision 0: SRAM and 32KiB EEPROM
+@item Revision 1: SRAM and 8KiB EEPROM
+@item Revision 2: 32KiB EEPROM
+@item Revision 3: 8KiB EEPROM
+@item Revision 4: SRAM only
+@end itemize
+
+The SRAM and EEPROM are hardware features of the selected revision and are
+emulated even if no backing image is configured. In that case their contents
+are temporary. SRAM and EEPROM data are stored in separate optional image files,
+not as CHIP packets in the CRT image.
+
+The ROM bank register is at $DE00 and uses bits 0-6 for the bank number; bit 7
+disables the cartridge. $DE01 selects the SRAM or EEPROM page and $DE03 is the
+memory control register. The selected SRAM or EEPROM page is accessible through
+the 256-byte window at $DF00-$DFFF.
 
 @c @node FIXME
 @subsection C128 Cartridge Specifics
