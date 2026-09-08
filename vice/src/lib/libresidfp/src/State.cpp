@@ -117,7 +117,7 @@ int State::saveState(SID &s, char* buffer, int size)
     state.filterCurve6581 = s.p->filterCurve6581;
     state.filterRange6581 = s.p->filterRange6581;
     state.filterCurve8580 = s.p->filterCurve8580;
-    state.old6581caps = s.p->old6581caps;
+    state.caps6581 = s.p->caps6581;
 
     state.vx[0][0] = s.filter6581->hpIntegrator.vx;
     state.vx[0][1] = s.filter6581->bpIntegrator.vx;
@@ -136,9 +136,10 @@ int State::saveState(SID &s, char* buffer, int size)
 
     state.exVlp = s.externalFilter.Vlp;
     state.exVhp = s.externalFilter.Vhp;
+    state.ext_res = s.externalFilter.m_ext_res;
+    state.clockFrequency = s.externalFilter.m_frequency;
 
     state.method = s.p->method;
-    state.clockFrequency = s.p->clockFrequency;
     state.samplingFrequency = s.p->samplingFrequency;
 
     switch (s.p->method)
@@ -227,11 +228,13 @@ void State::restoreState(SID &s, char* buffer, int size)
         f->vol = state.vol[i];
         f->enabled = state.enabled[i];
         f->filt = state.filt[i];
+        f->updateResonance((f->filt >> 4) & 0x0f);
+        f->updateMixing();
     }
     s.setFilter6581Curve(state.filterCurve6581);
     s.setFilter6581Range(state.filterRange6581);
     s.setFilter8580Curve(state.filterCurve8580);
-    s.enableOld6581caps(state.old6581caps);
+    s.set6581caps(state.caps6581);
 
     s.filter6581->hpIntegrator.vx = state.vx[0][0];
     s.filter6581->bpIntegrator.vx = state.vx[0][1];
@@ -250,8 +253,10 @@ void State::restoreState(SID &s, char* buffer, int size)
 
     s.externalFilter.Vlp = state.exVlp;
     s.externalFilter.Vhp = state.exVhp;
+    s.externalFilter.m_ext_res = state.ext_res;
 
     s.setSamplingParameters(state.clockFrequency, state.method, state.samplingFrequency);
+    s.externalFilter.recalcParams();
 
     for (int i = 0; i < 3; i++)
     {

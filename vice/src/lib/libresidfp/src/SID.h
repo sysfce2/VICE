@@ -355,11 +355,6 @@ public:
     void enableFilter(bool enable);
 
     /**
-     * Enable/disable old caps (2200pF) for 6581 model.
-     */
-    void enableOld6581caps(bool enable);
-
-    /**
      * Set paddle coordinates.
      */
     void setPaddle(uint8_t x, uint8_t y);
@@ -373,6 +368,16 @@ public:
      * Set the 6581 wave offset.
      */
     void setOffset6581(double offset);
+
+    /*
+     * Set the DC-Blocker resistance.
+     */
+    void setDCBRes(double res);
+
+    /**
+     * Set caps for 6581 model.
+     */
+    void set6581caps(CapsType type);
 };
 
 } // namespace reSIDfp

@@ -205,7 +205,8 @@ static int residfp_init(sound_t *psid, int speed, int cycles_per_sec, int factor
             break;
     }
     psid->sid->enableFilter(filters_enabled ? true : false);
-    psid->sid->enableOld6581caps(old_caps ? true : false);
+    /* FIXME: also handle CAPS330 ("Galway C128") */
+    psid->sid->set6581caps(old_caps ? CAPS2200 : CAPS470);
     psid->sid->setCombinedWaveforms(combined_table[combined_strength_int]);
 
     switch (sampling) {

@@ -1,6 +1,24 @@
-1.2.0 2026-07-xx
+1.3.0 2026-09-xx
+* Minor resampler fixes and optimizations
+* Allow choosing 330pF caps on the 6581 (#50)
+* Replace dithering with noise (#40)
+
+
+
+1.2.2 2026-08-30
+* Correctly restore filter status
+
+
+
+1.2.1 2026-08-08
+* Fixed external filter parameter range
+
+
+
+1.2.0 2026-08-07
 * Make DAC leakage adjustable (#10)
 * Make the 6581 waveform offset adjustable (#13)
+* Make external filter configurable (#44)
 
 
 
