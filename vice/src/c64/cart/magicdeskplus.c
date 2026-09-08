@@ -594,9 +594,9 @@ int magicdeskplus_crt_attach(FILE *fd, uint8_t *rawcart, uint8_t revision) {
         bankmask = 0x3f;
     }
     if (magicdeskplus_common_attach() < 0) {
-        set_magicdeskplus_revision(revision, NULL);
         return -1;
     }
+    set_magicdeskplus_revision(revision, NULL);
     return 0;
 }
 
