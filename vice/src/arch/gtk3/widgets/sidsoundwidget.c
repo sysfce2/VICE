@@ -55,12 +55,13 @@
  * $VICERES Sid2AddressStart            all
  * $VICERES Sid3AddressStart            all
  *
- * Until PSID files support more than three SIDs, these will be -vsid:
- * $VICERES Sid4AddressStart            -vsid
- * $VICERES Sid5AddressStart            -vsid
- * $VICERES Sid6AddressStart            -vsid
- * $VICERES Sid7AddressStart            -vsid
- * $VICERES Sid8AddressStart            -vsid
+ * $VICERES Sid4AddressStart            all
+ * $VICERES Sid5AddressStart            all
+ * $VICERES Sid6AddressStart            all
+ * $VICERES Sid7AddressStart            all
+ * $VICERES Sid8AddressStart            all
+ * $VICERES Sid9AddressStart            all
+ * $VICERES Sid10AddressStart            all
  */
 
 #include "vice.h"
