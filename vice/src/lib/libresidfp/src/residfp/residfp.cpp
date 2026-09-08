@@ -152,7 +152,7 @@ void residfp::enableFilter(bool enable)
 
 void residfp::enableOld6581caps(bool enable)
 {
-    sid.enableOld6581caps(enable);
+    sid.set6581caps(enable ? CAPS2200 : CAPS470);
 }
 
 void residfp::setOffset6581(double offset)
@@ -183,4 +183,14 @@ void residfp::restoreState(char* buffer, int size)
 void residfp::setDacLeakage(double level)
 {
     sid.setDacLeakage(level);
+}
+
+void residfp::setDCBRes(double res)
+{
+    sid.setDCBRes(res);
+}
+
+void residfp::set6581caps(CapsType type)
+{
+    sid.set6581caps(type);
 }

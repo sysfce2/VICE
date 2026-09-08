@@ -238,9 +238,11 @@ public:
      * When enabled the filter cutoff is lower.
      *
      * @param enable true to enable old 2200pF caps used on ASSY 326298
-     *               false to use the standard 470pF caps.
+     *               false to use the standard 470pF caps. (default off)
+     * @deprecated since 1.3
+     * @see #set6581caps(CapsType)
      */
-    void enableOld6581caps(bool enable);
+    RESIDFP_DEPRECATED void enableOld6581caps(bool enable);
 
     /**
      * Set paddle coordinates.
@@ -285,7 +287,7 @@ public:
      * Set the DAC leakage level.
      * Affects the envelope and waveforms.
      *
-     * @param level the leakage level, between 0 (no leakage) and 1
+     * @param level the leakage level, between 0 (no leakage) and 1 (standard leakage) (default 1.0)
      *
      * @since 1.2
      */
@@ -295,11 +297,35 @@ public:
      * Set the 6581 wave offset.
      * Affects the volume of digi samples.
      *
-     * @param offset the waveform offset, between 0 (faint digis) and 1 (loud digis)
+     * @param offset the waveform offset, between 0 (average digis) and 1 (loud digis) (default 1.0)
      *
      * @since 1.2
      */
     void setOffset6581(double offset);
+
+    /**
+     * Set the DC-Blocker resistance.
+     * Affects the highpass cutoff frequency.
+     *
+     * @param res the resistance value, between 0 (10KOhm => ~1.6Hz) and 1 (1KOhm => ~16Hz) (default 0.0)
+     *
+     * @since 1.2
+     */
+    void setDCBRes(double res);
+
+    /**
+     * Set caps for 6581 model.
+     * Affects the filter cutoff frequency.
+     * Choose between:
+     * - 2200pF: low cutoff, found on old ASSY 326298
+     * -  470pF: normal cutoff, found on most of the boards
+     * -  330pF: high cutoff, found on some boards and likely on Galway's C128D
+     *
+     * @param type caps type @see #reSIDfp::CapsType
+     *
+     * @since 1.3
+     */
+    void set6581caps(CapsType type);
 };
 
 }

@@ -196,12 +196,6 @@ void SID::enableFilter(bool enable)
     filter8580->enable(enable);
 }
 
-void SID::enableOld6581caps(bool enable)
-{
-    p->old6581caps = enable;
-    filter6581->enableOldCaps(enable);
-}
-
 void SID::voiceSync(bool sync)
 {
     if (sync)
@@ -551,7 +545,6 @@ void SID::setSamplingParameters(double clockFrequency, SamplingMethod method, do
     }
 
     p->method = method;
-    p->clockFrequency = clockFrequency;
     p->samplingFrequency = samplingFrequency;
 }
 
@@ -637,6 +630,17 @@ void SID::setOffset6581(double offset)
     // TODO determine a reasonable range
     offset_6581 = 0x380 + static_cast<unsigned int>((1. - clamp(offset)) * 0x200);
     setChipModel(model);
+}
+
+void SID::setDCBRes(double res)
+{
+    externalFilter.setExtResistance(clamp(res));
+}
+
+void SID::set6581caps(CapsType type)
+{
+    p->caps6581 = type;
+    filter6581->setCaps(type);
 }
 
 } // namespace reSIDfp

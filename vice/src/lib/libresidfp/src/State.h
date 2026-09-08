@@ -35,16 +35,16 @@ class SID;
 struct Params
 {
     SamplingMethod method;
-    double clockFrequency;
     double samplingFrequency;
     double filterCurve6581;
     double filterRange6581;
     double filterCurve8580;
-    bool   old6581caps;
+    CapsType caps6581;
 };
 
-struct State
+class State
 {
+public:
     /**
      * Save current state.
      */
@@ -60,6 +60,7 @@ struct State
      */
     static int size(SID &s);
 
+private:
     // SID
     int bus_value_ttl;
     unsigned int nextVoiceSync;
@@ -137,7 +138,7 @@ struct State
     double filterCurve6581;
     double filterRange6581;
     double filterCurve8580;
-    bool   old6581caps;
+    CapsType caps6581;
 
     // Integrators
     int32_t vx[2][2];
@@ -149,6 +150,7 @@ struct State
     /// External filter
     int32_t exVlp;
     int32_t exVhp;
+    double ext_res;
 
     // Resampler
     double clockFrequency;
