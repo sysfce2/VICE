@@ -873,7 +873,7 @@ int snapshot_probe(const char *filename)
 
     f = zfile_fopen(filename, MODE_READ);
     if (f == NULL) {
-        goto fail;
+        return 0;
     }
 
     /* Magic string.  */
